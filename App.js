@@ -7,6 +7,7 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Platform,
   KeyboardAvoidingView,
   Keyboard, 
@@ -20,59 +21,60 @@ export default function App() {
     Keyboard.dismiss();
   }
 
-  console.log(Platform.OS)
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("./assets/images/background-photo.jpg")}
-        style={styles.backgroundPhoto}
-      >
-        <KeyboardAvoidingView
-          // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          behavior={Platform.OS === 'ios' && 'padding'}
+    <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View style={styles.container}>
+        <ImageBackground
+          source={require("./assets/images/background-photo.jpg")}
+          style={styles.backgroundPhoto}
         >
-          <Text style={styles.title}>Keep coding and don't stop!</Text>
-          <Text style={styles.title}>Registration</Text>
-          <View style={{...styles.registerForm, marginBottom: isShowKeyboard ? 20 : 100}}>
-            <View>
-              <Text style={styles.inputTitle}>Login</Text>
-              <TextInput
-                textAlign={'center'}
-                onFocus={()=>setIsShowKeyboard(true)}
-                style={styles.input}
-              />
+          <KeyboardAvoidingView
+            // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' && 'padding'}
+          >
+            <Text style={styles.title}>Keep coding and don't stop!</Text>
+            <Text style={styles.title}>Registration</Text>
+            <View style={{...styles.registerForm, marginBottom: isShowKeyboard ? 20 : 100}}>
+              <View>
+                <Text style={styles.inputTitle}>Login</Text>
+                <TextInput
+                  textAlign={'center'}
+                  onFocus={()=>setIsShowKeyboard(true)}
+                  style={styles.input}
+                />
+              </View>
+              <View>
+                <Text style={styles.inputTitle}>Email</Text>
+                <TextInput
+                  textAlign={'center'}
+                  onFocus={()=>setIsShowKeyboard(true)}
+                  style={styles.input}
+                />
+              </View>
+              <View>
+                <Text style={styles.inputTitle}>Password</Text>
+                <TextInput
+                  textAlign={'center'}
+                  onFocus={()=>setIsShowKeyboard(true)}
+                  secureTextEntry={true}
+                  style={styles.input}
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={keyboardHide}
+                style={styles.btn}
+              >
+                <Text style={styles.btnTitle}>
+                  Register
+                </Text>
+              </TouchableOpacity>
             </View>
-            <View>
-              <Text style={styles.inputTitle}>Email</Text>
-              <TextInput
-                textAlign={'center'}
-                onFocus={()=>setIsShowKeyboard(true)}
-                style={styles.input}
-              />
-            </View>
-            <View>
-              <Text style={styles.inputTitle}>Password</Text>
-              <TextInput
-                textAlign={'center'}
-                onFocus={()=>setIsShowKeyboard(true)}
-                secureTextEntry={true}
-                style={styles.input}
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={keyboardHide}
-              style={styles.btn}
-            >
-              <Text style={styles.btnTitle}>
-                Register
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
-      </ImageBackground>
-      <StatusBar style="auto" />
-    </View>
+          </KeyboardAvoidingView>
+        </ImageBackground>
+        <StatusBar style="auto" />
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 
