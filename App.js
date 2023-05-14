@@ -9,10 +9,16 @@ import {
   TouchableOpacity,
   Platform,
   KeyboardAvoidingView,
+  Keyboard, 
 } from 'react-native';
 
 export default function App() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  }
 
   console.log(Platform.OS)
   return (
@@ -55,6 +61,7 @@ export default function App() {
             </View>
             <TouchableOpacity
               activeOpacity={0.8}
+              onPress={keyboardHide}
               style={styles.btn}
             >
               <Text style={styles.btnTitle}>
