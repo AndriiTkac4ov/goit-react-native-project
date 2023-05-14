@@ -1,19 +1,19 @@
-import { StatusBar } from 'expo-status-bar';
+// import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
   Text,
   View,
   ImageBackground,
   TextInput,
-  Button,
+  TouchableOpacity,
 } from 'react-native';
 
 export default function App() {
   return (
     <View style={styles.container}>
       <ImageBackground
-        style={styles.backgroundPhoto}
         source={require("./assets/images/background-photo.jpg")}
+        style={styles.backgroundPhoto}
       >
         <Text style={styles.title}>Keep coding and don't stop!</Text>
         <Text style={styles.title}>Registration</Text>
@@ -21,29 +21,36 @@ export default function App() {
           <View>
             <Text style={styles.inputTitle}>Login</Text>
             <TextInput
-              style={styles.input}
               textAlign={'center'}
+              style={styles.input}
             />
           </View>
           <View>
             <Text style={styles.inputTitle}>Email</Text>
             <TextInput
-              style={styles.input}
               textAlign={'center'}
+              style={styles.input}
             />
           </View>
           <View>
             <Text style={styles.inputTitle}>Password</Text>
             <TextInput
-              style={styles.input}
               textAlign={'center'}
               secureTextEntry={true}
+              style={styles.input}
             />
           </View>
-          <Button title='Register' />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.btn}
+          >
+            <Text style={styles.btnTitle}>
+              Register
+            </Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
-      <StatusBar style="auto" />
+      {/* <StatusBar style="auto" /> */}
     </View>
   );
 }
@@ -80,5 +87,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fff',
     borderRadius: 6,
+  },
+  btn: {
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+    borderRadius: 20,
+    backgroundColor: 'yellow',
+  },
+  btnTitle: {
+    color: 'brown',
+    fontSize: 18,
   },
 });
