@@ -1,4 +1,5 @@
-// import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,51 +7,64 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 export default function App() {
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
+  console.log(Platform.OS)
   return (
     <View style={styles.container}>
       <ImageBackground
         source={require("./assets/images/background-photo.jpg")}
         style={styles.backgroundPhoto}
       >
-        <Text style={styles.title}>Keep coding and don't stop!</Text>
-        <Text style={styles.title}>Registration</Text>
-        <View style={styles.registerForm}>
-          <View>
-            <Text style={styles.inputTitle}>Login</Text>
-            <TextInput
-              textAlign={'center'}
-              style={styles.input}
-            />
+        <KeyboardAvoidingView
+          // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === 'ios' && 'padding'}
+        >
+          <Text style={styles.title}>Keep coding and don't stop!</Text>
+          <Text style={styles.title}>Registration</Text>
+          <View style={{...styles.registerForm, marginBottom: isShowKeyboard ? 20 : 100}}>
+            <View>
+              <Text style={styles.inputTitle}>Login</Text>
+              <TextInput
+                textAlign={'center'}
+                onFocus={()=>setIsShowKeyboard(true)}
+                style={styles.input}
+              />
+            </View>
+            <View>
+              <Text style={styles.inputTitle}>Email</Text>
+              <TextInput
+                textAlign={'center'}
+                onFocus={()=>setIsShowKeyboard(true)}
+                style={styles.input}
+              />
+            </View>
+            <View>
+              <Text style={styles.inputTitle}>Password</Text>
+              <TextInput
+                textAlign={'center'}
+                onFocus={()=>setIsShowKeyboard(true)}
+                secureTextEntry={true}
+                style={styles.input}
+              />
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.btn}
+            >
+              <Text style={styles.btnTitle}>
+                Register
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View>
-            <Text style={styles.inputTitle}>Email</Text>
-            <TextInput
-              textAlign={'center'}
-              style={styles.input}
-            />
-          </View>
-          <View>
-            <Text style={styles.inputTitle}>Password</Text>
-            <TextInput
-              textAlign={'center'}
-              secureTextEntry={true}
-              style={styles.input}
-            />
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={styles.btn}
-          >
-            <Text style={styles.btnTitle}>
-              Register
-            </Text>
-          </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </ImageBackground>
-      {/* <StatusBar style="auto" /> */}
+      <StatusBar style="auto" />
     </View>
   );
 }
@@ -63,7 +77,8 @@ const styles = StyleSheet.create({
   backgroundPhoto: {
     flex: 1,
     resizeMode: 'cover',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    // justifyContent: 'center',
     // alignItems: 'center',
   },
   title: {
@@ -72,9 +87,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   registerForm: {
-    borderWidth: 1,
-    borderColor: 'red',
-    borderRadius: 6,
     marginHorizontal: 40,
   },
   inputTitle: {
@@ -94,7 +106,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 40,
     borderRadius: 20,
-    backgroundColor: 'yellow',
+
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'aquamarine',
+      },
+      android: {
+        backgroundColor: 'violet',
+      },
+    }),
   },
   btnTitle: {
     color: 'brown',
