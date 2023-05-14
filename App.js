@@ -13,12 +13,27 @@ import {
   Keyboard, 
 } from 'react-native';
 
+const initialState = {
+  login: '',
+  email: '',
+  password: '',
+}
+
 export default function App() {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [state, setState] = useState(initialState)
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+  }
+
+  const sendValues = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+    console.log(Platform.OS);
+    console.log(state);
+    setState(initialState);
   }
 
   return (
@@ -39,7 +54,9 @@ export default function App() {
                 <Text style={styles.inputTitle}>Login</Text>
                 <TextInput
                   textAlign={'center'}
-                  onFocus={()=>setIsShowKeyboard(true)}
+                  value={state.login}
+                  onChangeText={(value)=>setState((prevState)=> ({...prevState, login: value}))}
+                  onFocus={() => setIsShowKeyboard(true)}
                   style={styles.input}
                 />
               </View>
@@ -47,7 +64,9 @@ export default function App() {
                 <Text style={styles.inputTitle}>Email</Text>
                 <TextInput
                   textAlign={'center'}
-                  onFocus={()=>setIsShowKeyboard(true)}
+                  value={state.email}
+                  onChangeText={(value)=>setState((prevState)=> ({...prevState, email: value}))}
+                  onFocus={() => setIsShowKeyboard(true)}
                   style={styles.input}
                 />
               </View>
@@ -55,14 +74,16 @@ export default function App() {
                 <Text style={styles.inputTitle}>Password</Text>
                 <TextInput
                   textAlign={'center'}
-                  onFocus={()=>setIsShowKeyboard(true)}
                   secureTextEntry={true}
+                  value={state.password}
+                  onChangeText={(value)=>setState((prevState)=> ({...prevState, password: value}))}
+                  onFocus={() => setIsShowKeyboard(true)}
                   style={styles.input}
                 />
               </View>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={keyboardHide}
+                onPress={sendValues}
                 style={styles.btn}
               >
                 <Text style={styles.btnTitle}>
