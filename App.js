@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Keyboard, 
 } from 'react-native';
+import { useFonts } from 'expo-font';
 
 const initialState = {
   login: '',
@@ -20,6 +21,11 @@ const initialState = {
 }
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
+    'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
+  });
+
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState)
 
@@ -34,6 +40,10 @@ export default function App() {
     console.log(Platform.OS);
     console.log(state);
     setState(initialState);
+  }
+
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (
@@ -112,6 +122,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
   },
   title: {
+    fontFamily: 'Roboto-Medium',
     color: '#000',
     fontSize: 30,
     textAlign: 'center',
@@ -120,6 +131,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 40,
   },
   inputTitle: {
+    fontFamily: 'Roboto-Regular',
     color: '#fff',
     fontSize: 18,
   },
@@ -147,6 +159,7 @@ const styles = StyleSheet.create({
     }),
   },
   btnTitle: {
+    fontFamily: 'Roboto-Regular',
     color: 'brown',
     fontSize: 18,
   },
