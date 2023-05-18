@@ -11,6 +11,7 @@ import {
     KeyboardAvoidingView,
     Keyboard, 
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const initialState = {
     name: '',
@@ -25,6 +26,8 @@ export default function RegistrationScreen() {
     const [isInFocusName, setIsInFocusName] = useState(false);
     const [isInFocusEmail, setIsInFocusEmail] = useState(false);
     const [isInFocusPassword, setIsInFocusPassword] = useState(false);
+
+    const navigation = useNavigation();
 
     // const handleFocusInputs = option => {
     //     switch (option) {
@@ -163,7 +166,7 @@ export default function RegistrationScreen() {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     activeOpacity={0.8}
-                                    // onPress={sendValues}
+                                    onPress={() => navigation.navigate('Login')}
                                     style={styles.authLink}
                                 >
                                     <Text style={styles.authLinkText}>
