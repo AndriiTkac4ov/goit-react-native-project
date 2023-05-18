@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'cover',
         justifyContent: 'flex-end',
+        // alignItems: 'center',
     },
     registerWrapper: {
         backgroundColor: '#FFFFFF',
