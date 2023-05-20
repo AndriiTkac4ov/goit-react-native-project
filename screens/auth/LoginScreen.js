@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     StyleSheet,
     Text,
@@ -9,31 +9,44 @@ import {
     TouchableWithoutFeedback,
     Platform,
     KeyboardAvoidingView,
-    Keyboard, 
+    Keyboard,
+    Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const initialState = {
-    name: '',
     email: '',
     password: '',
 }
 
-export default function RegistrationScreen() {
+export default function LoginScreen() {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
     // const [isInFocus, setIsInFocus] = useState(false);
-    const [isInFocusName, setIsInFocusName] = useState(false);
     const [isInFocusEmail, setIsInFocusEmail] = useState(false);
     const [isInFocusPassword, setIsInFocusPassword] = useState(false);
+
+// dimensions part ------------------------------------------------
+    const [dimensions, setDimensions] = useState(
+        Dimensions.get('window').width - 16 * 2
+    )
+
+    useEffect(() => {
+        const onChangeWidth = () => {
+            const width = Dimensions.get('window').width - 16 * 2;
+            setDimensions(width);
+        };
+        Dimensions.addEventListener('change', onChangeWidth);
+        return () => {
+            Dimensions.removeEventListener('change', onChangeWidth);
+        };
+    }, [])
+// dimensions part ------------------------------------------------
 
     const navigation = useNavigation();
 
     // const handleFocusInputs = option => {
     //     switch (option) {
-    //         case 'isInFocusName':
-    //             setIsInFocusName(true);
-    //             break;
     //         case 'isInFocusEmail':
     //             setIsInFocusEmail(true);
     //             break;
@@ -56,7 +69,6 @@ export default function RegistrationScreen() {
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
-        setIsInFocusName(false);
         setIsInFocusEmail(false);
         setIsInFocusPassword(false);
         Keyboard.dismiss();
@@ -72,23 +84,14 @@ export default function RegistrationScreen() {
     //     setIsInFocus(true);
     // }
 
-    const handleFocusOnName = () => {
-        setIsShowKeyboard(true);
-        setIsInFocusName(true);
-        setIsInFocusEmail(false);
-        setIsInFocusPassword(false);
-    }
-
     const handleFocusOnEmail = () => {
         setIsShowKeyboard(true);
-        setIsInFocusName(false);
         setIsInFocusEmail(true);
         setIsInFocusPassword(false);
     }
 
     const handleFocusOnPassword = () => {
         setIsShowKeyboard(true);
-        setIsInFocusName(false);
         setIsInFocusEmail(false);
         setIsInFocusPassword(true);
     }
@@ -97,7 +100,7 @@ export default function RegistrationScreen() {
         <TouchableWithoutFeedback onPress={keyboardHide}>
             <View style={styles.container}>
                 <ImageBackground
-                    source={require("../assets/images/background-photo.jpg")}
+                    source={require("../../assets/images/background-photo.jpg")}
                     style={styles.backgroundPhoto}
                 >
                     <KeyboardAvoidingView
@@ -105,24 +108,13 @@ export default function RegistrationScreen() {
                         behavior={Platform.OS === 'ios' && 'padding'}
                     >
                         <View style={styles.registerWrapper}>
-                            <Text style={styles.title}>Registration</Text>
+                            <Text style={styles.title}>Log in</Text>
 
-                            <View style={{...styles.registerForm, marginBottom: isShowKeyboard ? 32 : 56}}>
-                                <View style={styles.inputWrapper}>
-                                    <TextInput
-                                        placeholder={'Name'}
-                                        placeholderTextColor={'#BDBDBD'}
-                                        value={state.name}
-                                        onChangeText={(value)=>setState((prevState)=> ({...prevState, name: value}))}
-                                        // onFocus={handleFocus}
-                                        onFocus={handleFocusOnName}
-                                        style={{
-                                            ...styles.input,
-                                            backgroundColor: isInFocusName ? '#FFFFFF' : '#F6F6F6',
-                                            borderColor: isInFocusName ? '#FF6C00' : '#E8E8E8',
-                                        }}
-                                    />
-                                </View>
+                            <View style={{
+                                ...styles.loginForm,
+                                marginBottom: isShowKeyboard ? 32 : 120,
+                                width: dimensions,
+                            }}>
                                 <View style={styles.inputWrapper}>
                                     <TextInput
                                         placeholder={'Email'}
@@ -161,16 +153,16 @@ export default function RegistrationScreen() {
                                     style={styles.btn}
                                 >
                                     <Text style={styles.btnTitle}>
-                                        Register
+                                        Log in
                                     </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     activeOpacity={0.8}
-                                    onPress={() => navigation.navigate('Login')}
+                                    onPress={() => navigation.navigate('Registration')}
                                     style={styles.authLink}
                                 >
                                     <Text style={styles.authLinkText}>
-                                        Do you have already an account? Log in
+                                        Don't you have an account? Register
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -191,13 +183,13 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'cover',
         justifyContent: 'flex-end',
-        // alignItems: 'center',
+        alignItems: 'center',
     },
     registerWrapper: {
         backgroundColor: '#FFFFFF',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
-        paddingTop: 92,
+        paddingTop: 32,
     },
     title: {
         fontFamily: 'Roboto-Medium',
@@ -208,7 +200,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 32,
     },
-    registerForm: {
+    loginForm: {
         marginHorizontal: 16,
     },
     inputWrapper: {

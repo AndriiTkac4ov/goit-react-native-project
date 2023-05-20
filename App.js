@@ -1,30 +1,30 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
+// import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
-import { useState, useEffect } from 'react';
-import { Dimensions } from 'react-native';
+// import { useState, useEffect } from 'react';
+// import { Dimensions } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from "@react-navigation/stack";
-import RegistrationScreen from './screens/RegistrationScreen';
-import LoginScreen from './screens/LoginScreen';
+import RegistrationScreen from './screens/auth/RegistrationScreen';
+import LoginScreen from './screens/auth/LoginScreen';
 
-const MainStack = createStackNavigator();
+const AuthStack = createStackNavigator();
 
 export default function App() {
-  const [dimensions, setDimensions] = useState(
-    Dimensions.get('window').width - 16 * 2
-  )
+  // const [dimensions, setDimensions] = useState(
+  //   Dimensions.get('window').width - 16 * 2
+  // )
   
-  useEffect(() => {
-    const onChangeWidth = () => {
-      const width = Dimensions.get('window').width - 16 * 2;
-      setDimensions(width);
-    };
-    Dimensions.addEventListener('change', onChangeWidth);
-    return () => {
-      Dimensions.removeEventListener('change', onChangeWidth);
-    };
-  }, [])
+  // useEffect(() => {
+  //   const onChangeWidth = () => {
+  //     const width = Dimensions.get('window').width - 16 * 2;
+  //     setDimensions(width);
+  //   };
+  //   Dimensions.addEventListener('change', onChangeWidth);
+  //   return () => {
+  //     Dimensions.removeEventListener('change', onChangeWidth);
+  //   };
+  // }, [])
 
   const [fontsLoaded] = useFonts({
     'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf'),
@@ -37,12 +37,23 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <MainStack.Navigator initialRouteName='Login'>
-        <MainStack.Screen name='Registration' component={RegistrationScreen} />
-        <MainStack.Screen name='Login' component={LoginScreen} />
-        <StatusBar style="auto" />
-        {/* width={dimensions} */}
-      </MainStack.Navigator>
+      <AuthStack.Navigator initialRouteName='Login'>
+        <AuthStack.Screen
+          name='Registration'
+          component={RegistrationScreen}
+          options={{
+              headerShown: false
+          }}
+        />
+        <AuthStack.Screen
+          name='Login'
+          component={LoginScreen}
+          options={{
+              headerShown: false
+          }}
+        />
+        {/* <StatusBar style="auto" /> */}
+      </AuthStack.Navigator>
     </NavigationContainer>
   );
 }
