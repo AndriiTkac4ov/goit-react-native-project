@@ -75,6 +75,7 @@ export default function LoginScreen() {
     }
 
     const sendValues = () => {
+        console.log(state);
         keyboardHide();
         setState(initialState);
     }

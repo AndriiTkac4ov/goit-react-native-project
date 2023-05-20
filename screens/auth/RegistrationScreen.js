@@ -81,6 +81,7 @@ export default function RegistrationScreen() {
     }
 
     const sendValues = () => {
+        console.log(state);
         keyboardHide();
         setState(initialState);
     }
