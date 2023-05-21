@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
     TouchableOpacity,
+    View,
     StyleSheet,
 } from "react-native";
 import {
@@ -16,7 +17,15 @@ const MainTab = createBottomTabNavigator();
 export default function HomeScreen() {
     return (
         <MainTab.Navigator
-            screenOptions={{ tabBarShowLabel: false }}
+            screenOptions={{
+                tabBarShowLabel: false,
+                tabBarItemStyle: {
+                    height: 40,
+                    borderRadius: 20,
+                    marginHorizontal: 30,
+                    marginTop: 8,
+                },
+            }}
         >
             <MainTab.Screen
                 name='Posts'
@@ -31,7 +40,7 @@ export default function HomeScreen() {
                             <MaterialIcons
                                 name="logout"
                                 size={24}
-                                color="black"
+                                style = {{color: "rgba(189, 189, 189, 1)"}}
                             />
                         </TouchableOpacity>
                     ),
@@ -82,6 +91,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
     logoutLink: {
-        backgroundColor: 'red',
+        marginRight: 16,
     },
 });
