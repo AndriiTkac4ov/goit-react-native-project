@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -10,9 +10,9 @@ import {
     Platform,
     KeyboardAvoidingView,
     Keyboard,
-    Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useWidthDimension } from '../../hooks/useWidthDimension';
 
 const initialState = {
     name: '',
@@ -27,23 +27,6 @@ export default function RegistrationScreen() {
     const [isInFocusName, setIsInFocusName] = useState(false);
     const [isInFocusEmail, setIsInFocusEmail] = useState(false);
     const [isInFocusPassword, setIsInFocusPassword] = useState(false);
-
-// dimensions part ------------------------------------------------
-    const [dimensions, setDimensions] = useState(
-        Dimensions.get('window').width - 16 * 2
-    )
-
-    useEffect(() => {
-        const onChangeWidth = () => {
-            const width = Dimensions.get('window').width - 16 * 2;
-            setDimensions(width);
-        };
-        Dimensions.addEventListener('change', onChangeWidth);
-        return () => {
-            Dimensions.removeEventListener('change', onChangeWidth);
-        };
-    }, [])
-// dimensions part ------------------------------------------------
 
     const navigation = useNavigation();
 
@@ -63,8 +46,6 @@ export default function RegistrationScreen() {
     //             break;
     //     }
     // }
-
-
 
     // const keyboardHide = () => {
     //     setIsShowKeyboard(false);
@@ -129,7 +110,7 @@ export default function RegistrationScreen() {
                             <View style={{
                                 ...styles.registerForm,
                                 marginBottom: isShowKeyboard ? 32 : 56,
-                                width: dimensions,
+                                width: useWidthDimension(),
                             }}>
                                 <View style={styles.inputWrapper}>
                                     <TextInput
@@ -246,8 +227,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto-Regular',
         fontSize: 16,
         color: '#212121',
-        // backgroundColor: '#F6F6F6',
-        // borderColor: '#E8E8E8',
         borderWidth: 1,
         borderRadius: 6,
     },
