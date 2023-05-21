@@ -20,48 +20,44 @@ const initialState = {
     password: '',
 }
 
+const initialStateForFocus = {
+    onName: false,
+    onEmail: false,
+    onPassword: false,
+}
+
 export default function RegistrationScreen() {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
-    const [isInFocusName, setIsInFocusName] = useState(false);
-    const [isInFocusEmail, setIsInFocusEmail] = useState(false);
-    const [isInFocusPassword, setIsInFocusPassword] = useState(false);
+    const [isFocus, setIsFocus] = useState(initialStateForFocus);
 
     const navigation = useNavigation();
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
-        setIsInFocusName(false);
-        setIsInFocusEmail(false);
-        setIsInFocusPassword(false);
+        setIsFocus(initialStateForFocus);
         Keyboard.dismiss();
     }
 
     const sendValues = () => {
         console.log(state);
-        keyboardHide();
         setState(initialState);
+        keyboardHide();
     }
 
     const handleFocusOnName = () => {
         setIsShowKeyboard(true);
-        setIsInFocusName(true);
-        setIsInFocusEmail(false);
-        setIsInFocusPassword(false);
+        setIsFocus({ onName: true });
     }
 
     const handleFocusOnEmail = () => {
         setIsShowKeyboard(true);
-        setIsInFocusName(false);
-        setIsInFocusEmail(true);
-        setIsInFocusPassword(false);
+        setIsFocus({ onEmail: true });
     }
 
     const handleFocusOnPassword = () => {
         setIsShowKeyboard(true);
-        setIsInFocusName(false);
-        setIsInFocusEmail(false);
-        setIsInFocusPassword(true);
+        setIsFocus({ onPassword: true });
     }
 
     return (
@@ -92,8 +88,8 @@ export default function RegistrationScreen() {
                                         onFocus={handleFocusOnName}
                                         style={{
                                             ...styles.input,
-                                            backgroundColor: isInFocusName ? '#FFFFFF' : '#F6F6F6',
-                                            borderColor: isInFocusName ? '#FF6C00' : '#E8E8E8',
+                                            backgroundColor: isFocus.onName ? '#FFFFFF' : '#F6F6F6',
+                                            borderColor: isFocus.onName ? '#FF6C00' : '#E8E8E8',
                                         }}
                                     />
                                 </View>
@@ -106,8 +102,8 @@ export default function RegistrationScreen() {
                                         onFocus={handleFocusOnEmail}
                                         style={{
                                             ...styles.input,
-                                            backgroundColor: isInFocusEmail ? '#FFFFFF' : '#F6F6F6',
-                                            borderColor: isInFocusEmail ? '#FF6C00' : '#E8E8E8',
+                                            backgroundColor: isFocus.onEmail ? '#FFFFFF' : '#F6F6F6',
+                                            borderColor: isFocus.onEmail ? '#FF6C00' : '#E8E8E8',
                                         }}
                                     />
                                 </View>
@@ -121,8 +117,8 @@ export default function RegistrationScreen() {
                                         onFocus={handleFocusOnPassword}
                                         style={{
                                             ...styles.input,
-                                            backgroundColor: isInFocusPassword ? '#FFFFFF' : '#F6F6F6',
-                                            borderColor: isInFocusPassword ? '#FF6C00' : '#E8E8E8',
+                                            backgroundColor: isFocus.onPassword ? '#FFFFFF' : '#F6F6F6',
+                                            borderColor: isFocus.onPassword ? '#FF6C00' : '#E8E8E8',
                                         }}
                                     />
                                 </View>

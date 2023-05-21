@@ -19,37 +19,38 @@ const initialState = {
     password: '',
 }
 
+const initialStateForFocus = {
+    onEmail: false,
+    onPassword: false,
+}
+
 export default function LoginScreen() {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
-    const [isInFocusEmail, setIsInFocusEmail] = useState(false);
-    const [isInFocusPassword, setIsInFocusPassword] = useState(false);
+    const [isFocus, setIsFocus] = useState(initialStateForFocus);
 
     const navigation = useNavigation();
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
-        setIsInFocusEmail(false);
-        setIsInFocusPassword(false);
+        setIsFocus(initialStateForFocus);
         Keyboard.dismiss();
     }
 
     const sendValues = () => {
         console.log(state);
-        keyboardHide();
         setState(initialState);
+        keyboardHide();
     }
 
     const handleFocusOnEmail = () => {
         setIsShowKeyboard(true);
-        setIsInFocusEmail(true);
-        setIsInFocusPassword(false);
+        setIsFocus({ onEmail: true });
     }
 
     const handleFocusOnPassword = () => {
         setIsShowKeyboard(true);
-        setIsInFocusEmail(false);
-        setIsInFocusPassword(true);
+        setIsFocus({ onPassword: true });
     }
 
     return (
@@ -80,8 +81,8 @@ export default function LoginScreen() {
                                         onFocus={handleFocusOnEmail}
                                         style={{
                                             ...styles.input,
-                                            backgroundColor: isInFocusEmail ? '#FFFFFF' : '#F6F6F6',
-                                            borderColor: isInFocusEmail ? '#FF6C00' : '#E8E8E8',
+                                            backgroundColor: isFocus.onEmail ? '#FFFFFF' : '#F6F6F6',
+                                            borderColor: isFocus.onEmail ? '#FF6C00' : '#E8E8E8',
                                         }}
                                     />
                                 </View>
@@ -95,8 +96,8 @@ export default function LoginScreen() {
                                         onFocus={handleFocusOnPassword}
                                         style={{
                                             ...styles.input,
-                                            backgroundColor: isInFocusPassword ? '#FFFFFF' : '#F6F6F6',
-                                            borderColor: isInFocusPassword ? '#FF6C00' : '#E8E8E8',
+                                            backgroundColor: isFocus.onPassword ? '#FFFFFF' : '#F6F6F6',
+                                            borderColor: isFocus.onPassword ? '#FF6C00' : '#E8E8E8',
                                         }}
                                     />
                                 </View>
