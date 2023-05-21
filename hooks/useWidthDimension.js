@@ -9,14 +9,11 @@ export const useWidthDimension = () => {
     useEffect(() => {
         const onChangeWidth = () => {
             const width = Dimensions.get('window').width - 16 * 2;
-        setDimensions(width);
-    };
-    Dimensions.addEventListener('change', onChangeWidth);
-        // return () => {
-        //     Dimensions.removeEventListener('change', onChangeWidth);
-        // };
+            setDimensions(width);
+        };
 
-        return () => width?.remove();
+        const subscription = Dimensions.addEventListener('change', onChangeWidth);
+        return () => subscription?.remove();
     }, [])
 
     return dimensions;

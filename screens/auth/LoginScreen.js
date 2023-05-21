@@ -22,31 +22,10 @@ const initialState = {
 export default function LoginScreen() {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
-    // const [isInFocus, setIsInFocus] = useState(false);
     const [isInFocusEmail, setIsInFocusEmail] = useState(false);
     const [isInFocusPassword, setIsInFocusPassword] = useState(false);
 
     const navigation = useNavigation();
-
-    // const handleFocusInputs = option => {
-    //     switch (option) {
-    //         case 'isInFocusEmail':
-    //             setIsInFocusEmail(true);
-    //             break;
-    //         case 'isInFocusPassword':
-    //             setIsInFocusPassword(true);
-    //             break;
-        
-    //         default:
-    //             break;
-    //     }
-    // }
-
-    // const keyboardHide = () => {
-    //     setIsShowKeyboard(false);
-    //     setIsInFocus(false);
-    //     Keyboard.dismiss();
-    // }
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
@@ -60,11 +39,6 @@ export default function LoginScreen() {
         keyboardHide();
         setState(initialState);
     }
-
-    // const handleFocus = () => {
-    //     setIsShowKeyboard(true);
-    //     setIsInFocus(true);
-    // }
 
     const handleFocusOnEmail = () => {
         setIsShowKeyboard(true);
@@ -103,7 +77,6 @@ export default function LoginScreen() {
                                         placeholderTextColor={'#BDBDBD'}
                                         value={state.email}
                                         onChangeText={(value)=>setState((prevState)=> ({...prevState, email: value}))}
-                                        // onFocus={handleFocus}
                                         onFocus={handleFocusOnEmail}
                                         style={{
                                             ...styles.input,
@@ -119,7 +92,6 @@ export default function LoginScreen() {
                                         secureTextEntry={true}
                                         value={state.password}
                                         onChangeText={(value)=>setState((prevState)=> ({...prevState, password: value}))}
-                                        // onFocus={handleFocus}
                                         onFocus={handleFocusOnPassword}
                                         style={{
                                             ...styles.input,
