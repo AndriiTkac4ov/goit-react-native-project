@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
     TouchableOpacity,
-    View,
     StyleSheet,
 } from "react-native";
 import {
