@@ -70,7 +70,7 @@ export default function LoginScreen() {
                             <View style={{
                                 ...styles.loginForm,
                                 marginBottom: isShowKeyboard ? 32 : 120,
-                                width: useWidthDimension(),
+                                width: useWidthDimension(16),
                             }}>
                                 <View style={styles.inputWrapper}>
                                     <TextInput

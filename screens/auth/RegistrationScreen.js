@@ -77,7 +77,7 @@ export default function RegistrationScreen() {
                             <View style={{
                                 ...styles.registerForm,
                                 marginBottom: isShowKeyboard ? 32 : 56,
-                                width: useWidthDimension(),
+                                width: useWidthDimension(16),
                             }}>
                                 <View style={styles.inputWrapper}>
                                     <TextInput

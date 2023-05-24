@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Dimensions } from 'react-native';
 
-export const useWidthDimension = () => {
+export const useWidthDimension = (marginHorizontal) => {
     const [dimensions, setDimensions] = useState(
-        Dimensions.get('window').width - 16 * 2
+        Dimensions.get('window').width - marginHorizontal * 2
     )
 
     useEffect(() => {
         const onChangeWidth = () => {
-            const width = Dimensions.get('window').width - 16 * 2;
+            const width = Dimensions.get('window').width - marginHorizontal * 2;
             setDimensions(width);
         };
 
