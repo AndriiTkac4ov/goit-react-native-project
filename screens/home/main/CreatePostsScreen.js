@@ -11,8 +11,13 @@ import { FontAwesome } from '@expo/vector-icons';
 
 export default function CreatePostsScreen({ navigation }) {
     const [camera, setCamera] = useState(null);
-    const [snap, setSnap] = useState(null); 
+    const [snap, setSnap] = useState(null);
+    const [isCameraReady, setIsCameraReady] = useState(false);
 
+    const onCameraReady = () => {
+        setIsCameraReady(true);
+    };
+    
     const takePhoto = async () => {
         const snap = await camera.takePictureAsync();
         setSnap(snap.uri);
@@ -24,13 +29,21 @@ export default function CreatePostsScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Camera style={styles.camera} ref={setCamera}>
+            <Camera
+                ref={setCamera}
+                onCameraReady={onCameraReady}
+                style={styles.camera}
+            >
                 {snap &&
                     <View style={styles.takePhotoContainer}>
                         <Image soure={{ uri: snap}} style={styles.photo} />
                     </View>
                 }
-                <TouchableOpacity style={styles.snapContainer} onPress={takePhoto}>
+                <TouchableOpacity
+                    disabled={!isCameraReady}
+                    onPress={takePhoto}
+                    style={styles.snapContainer}
+                >
                     <FontAwesome name="camera" size={24} color="rgba(189, 189, 189, 1)" />
                 </TouchableOpacity>
             </Camera>
