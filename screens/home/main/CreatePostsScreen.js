@@ -50,7 +50,7 @@ export default function CreatePostsScreen({ navigation }) {
     };
 
     const sendPhoto = () => {
-        navigation.navigate('Posts', { photo });
+        navigation.navigate('DefaultScreen', { photo }, { location });
     };
 
     const keyboardHide = () => {
@@ -147,7 +147,6 @@ export default function CreatePostsScreen({ navigation }) {
                 </KeyboardAvoidingView>
             </View>
         </TouchableWithoutFeedback>
-        
     );
 };
 
