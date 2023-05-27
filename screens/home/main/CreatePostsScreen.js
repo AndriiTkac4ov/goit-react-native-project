@@ -17,18 +17,17 @@ import { FontAwesome } from '@expo/vector-icons';
 
 export default function CreatePostsScreen({ navigation }) {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-    const [hasPermission, setHasPermission] = useState(null);
-    const [isCameraReady, setIsCameraReady] = useState(false);
+    const [hasCameraPermission, setHasCameraPermission] = useState(null);
     const [cameraRef, setCameraRef] = useState(null);
-    const [snap, setSnap] = useState(null);
+    const [photo, setPhoto] = useState(null);
     const [location, setLocation] = useState(null);
 
     useEffect(() => {
         (async () => {
-            const { statusOfCamera } = await Camera.requestCameraPermissionsAsync();
+            const cameraPermission = await Camera.requestCameraPermissionsAsync();
             await MediaLibrary.requestPermissionsAsync();
 
-            setHasPermission(statusOfCamera === "granted");
+            setHasCameraPermission(cameraPermission.status === "granted");
 
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== "granted") {
@@ -43,13 +42,12 @@ export default function CreatePostsScreen({ navigation }) {
             // setLocation(coords);
         })();
     }, []);
-    
-    const onCameraReady = () => {
-        setIsCameraReady(true);
-    };
 
     const takePhoto = async () => {
         const snap = await cameraRef.takePictureAsync();
+        setPhoto(snap.uri);
+        await MediaLibrary.createAssetAsync(snap.uri);
+
         let location = await Location.getCurrentPositionAsync({});
             const coords = {
                 latitude: location.coords.latitude,
@@ -57,16 +55,16 @@ export default function CreatePostsScreen({ navigation }) {
             };
         setLocation(coords);
         console.log(location);
-        setSnap(snap.uri);
     };
 
-    const sendPhoto = async () => {
-        navigation.navigate('Posts', { snap });
+    const sendPhoto = () => {
+        navigation.navigate('Posts', { photo });
     };
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         // setIsFocus(initialStateForFocus);
+        styles.takePhotoContainer.display = 'none';
         Keyboard.dismiss();
     }
 
@@ -75,31 +73,36 @@ export default function CreatePostsScreen({ navigation }) {
         // setIsFocus({ onTitle: true });
     }
 
+    if (hasCameraPermission === null) {
+        return <View />;
+    }
+    if (hasCameraPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
+
     return (
         <TouchableWithoutFeedback onPress={keyboardHide}>
             <View style={styles.container}>
+                <Camera
+                    ref={setCameraRef}
+                    style={styles.camera}
+                >
+                    {photo &&
+                        <View style={styles.takePhotoContainer}>
+                            <Image source={{ uri: photo }} style={styles.photo} />
+                        </View>
+                    }
+                    <TouchableOpacity
+                        onPress={takePhoto}
+                        style={styles.snapContainer}
+                    >
+                        <FontAwesome name="camera" size={24} color="rgba(189, 189, 189, 1)" />
+                    </TouchableOpacity>
+                </Camera>
                 <KeyboardAvoidingView
                     // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     behavior={Platform.OS === 'ios' && 'padding'}
                 >
-                    <Camera
-                        ref={setCameraRef}
-                        onCameraReady={onCameraReady}
-                        style={styles.camera}
-                    >
-                        {snap &&
-                            <View style={styles.takePhotoContainer}>
-                                <Image soure={{ uri: snap}} style={styles.photo} />
-                            </View>
-                        }
-                        <TouchableOpacity
-                            disabled={!isCameraReady}
-                            onPress={takePhoto}
-                            style={styles.snapContainer}
-                        >
-                            <FontAwesome name="camera" size={24} color="rgba(189, 189, 189, 1)" />
-                        </TouchableOpacity>
-                    </Camera>
                     <View
                         style={{
                             // ...styles.loginForm,
@@ -107,48 +110,48 @@ export default function CreatePostsScreen({ navigation }) {
                             // width: useWidthDimension(16),
                         }}
                     >
-                    <View style={styles.inputWrapper}>
-                        <TouchableOpacity style={styles.sendButton}>
-                            <Text style={styles.senddLabel}>Upload a photo</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.inputWrapper}>
-                        <TextInput
-                            placeholder={'Title...'}
-                            placeholderTextColor={'#BDBDBD'}
-                            // value={state.email}
-                            // onChangeText={(value)=>setState((prevState)=> ({...prevState, email: value}))}
-                            onFocus={handleFocusOn}
-                            style={{
-                                ...styles.input,
-                                // backgroundColor: isFocus.onEmail ? '#FFFFFF' : '#F6F6F6',
-                                // borderColor: isFocus.onEmail ? '#FF6C00' : '#E8E8E8',
-                            }}
-                        />
-                    </View>
-                    <View style={styles.inputWrapper}>
-                        <TextInput
-                            placeholder={'Location'}
-                            placeholderTextColor={'#BDBDBD'}
-                            // value={state.email}
-                            // onChangeText={(value)=>setState((prevState)=> ({...prevState, email: value}))}
-                            onFocus={handleFocusOn}
-                            style={{
-                                ...styles.input,
-                                // backgroundColor: isFocus.onEmail ? '#FFFFFF' : '#F6F6F6',
-                                // borderColor: isFocus.onEmail ? '#FF6C00' : '#E8E8E8',
-                            }}
-                        />
-                    </View>
-                    <View style={styles.btnContainer}>
-                        <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={sendPhoto}
-                            style={styles.btn}
-                        >
-                            <Text style={styles.btnTitle}>Bring out</Text>
-                        </TouchableOpacity>
-                    </View>
+                        <View style={styles.inputWrapper}>
+                            <TouchableOpacity style={styles.sendButton}>
+                                <Text style={styles.senddLabel}>Upload a photo</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.inputWrapper}>
+                            <TextInput
+                                placeholder={'Title...'}
+                                placeholderTextColor={'#BDBDBD'}
+                                // value={state.email}
+                                // onChangeText={(value)=>setState((prevState)=> ({...prevState, email: value}))}
+                                onFocus={handleFocusOn}
+                                style={{
+                                    ...styles.input,
+                                    // backgroundColor: isFocus.onEmail ? '#FFFFFF' : '#F6F6F6',
+                                    // borderColor: isFocus.onEmail ? '#FF6C00' : '#E8E8E8',
+                                }}
+                            />
+                        </View>
+                        <View style={styles.inputWrapper}>
+                            <TextInput
+                                placeholder={'Location'}
+                                placeholderTextColor={'#BDBDBD'}
+                                // value={state.email}
+                                // onChangeText={(value)=>setState((prevState)=> ({...prevState, email: value}))}
+                                onFocus={handleFocusOn}
+                                style={{
+                                    ...styles.input,
+                                    // backgroundColor: isFocus.onEmail ? '#FFFFFF' : '#F6F6F6',
+                                    // borderColor: isFocus.onEmail ? '#FF6C00' : '#E8E8E8',
+                                }}
+                            />
+                        </View>
+                        <View style={styles.btnContainer}>
+                            <TouchableOpacity
+                                activeOpacity={0.8}
+                                onPress={sendPhoto}
+                                style={styles.btn}
+                            >
+                                <Text style={styles.btnTitle}>Bring out</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </KeyboardAvoidingView>
             </View>
@@ -184,8 +187,8 @@ const styles = StyleSheet.create({
         borderColor: '#FF6C00',
     },
     photo: {
-        height: 200,
-        width: 358,
+        height: 160,
+        width: 238,
     },
     inputWrapper: {
         marginBottom: 16,
@@ -206,6 +209,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#ffffff',
+        opacity: 0.3,
     },
     sendButton: {
         marginTop: 8,
