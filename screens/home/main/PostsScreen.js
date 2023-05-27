@@ -4,10 +4,12 @@ import {
     Text,
     FlatList,
     Image,
+    TouchableOpacity,
     StyleSheet,
 } from 'react-native';
+import { EvilIcons } from '@expo/vector-icons';
 
-export default function PostsScreen({ route }) {
+export default function PostsScreen({ route, navigation }) {
     const [posts, setPosts] = useState([]);
 
     console.log('route.params', route.params);
@@ -20,6 +22,14 @@ export default function PostsScreen({ route }) {
 
     console.log('posts', posts);
 
+    const readComments = () => {
+        navigation.navigate('Comments', { photo });
+    };
+
+    const lookMap = () => {
+        navigation.navigate('Map', { photo });
+    };
+
     return (
         <View style={styles.container}>
             <FlatList
@@ -28,6 +38,20 @@ export default function PostsScreen({ route }) {
                 renderItem={({ item }) => (
                     <View style={styles.postContainer}>
                         <Image source={{ uri: item.photo }} style={styles.postImage} />
+                        <View style={styles.postInformation}>
+                            <TouchableOpacity
+                                // onPress={readComments}
+                                // style={styles.linkContainer}
+                            >
+                                <EvilIcons name="comment" size={24} color="black" />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                // onPress={lookMap}
+                                // style={styles.linkContainer}
+                            >
+                                <EvilIcons name="location" size={24} color="black" />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 )}
             />
@@ -39,14 +63,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
+        paddingHorizontal: 16,
     },
     postContainer: {
         marginBottom: 8,
     },
     postImage: {
-        marginHorizontal: 16,
         height: 200,
         borderWidth: 2,
         borderColor: 'tomato',
+    },
+    postInformation: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
 });

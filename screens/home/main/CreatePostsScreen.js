@@ -26,20 +26,12 @@ export default function CreatePostsScreen({ navigation }) {
         (async () => {
             const cameraPermission = await Camera.requestCameraPermissionsAsync();
             await MediaLibrary.requestPermissionsAsync();
-
             setHasCameraPermission(cameraPermission.status === "granted");
 
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
+            let locationPermission = await Location.requestForegroundPermissionsAsync();
+            if (locationPermission.status !== "granted") {
                 console.log("Permission to access location was denied");
-            }
-
-            // let location = await Location.getCurrentPositionAsync({});
-            // const coords = {
-            //     latitude: location.coords.latitude,
-            //     longitude: location.coords.longitude,
-            // };
-            // setLocation(coords);
+            };
         })();
     }, []);
 
@@ -54,7 +46,7 @@ export default function CreatePostsScreen({ navigation }) {
                 longitude: location.coords.longitude,
             };
         setLocation(coords);
-        console.log(location);
+        console.log(coords);
     };
 
     const sendPhoto = () => {
@@ -64,7 +56,6 @@ export default function CreatePostsScreen({ navigation }) {
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         // setIsFocus(initialStateForFocus);
-        styles.takePhotoContainer.display = 'none';
         Keyboard.dismiss();
     }
 
