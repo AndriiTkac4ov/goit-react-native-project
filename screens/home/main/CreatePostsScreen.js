@@ -8,6 +8,7 @@ import {
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
     Keyboard,
+    Dimensions,
     StyleSheet,
 } from 'react-native';
 import { Camera } from 'expo-camera';
@@ -19,6 +20,8 @@ const initialInfoOfPhoto = {
     photoTitle: '',
     photoLocation: '',
 }
+
+const screenWidth = Dimensions.get('window').width - 36 - 80;
 
 export default function CreatePostsScreen({ navigation }) {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -175,17 +178,16 @@ const styles = StyleSheet.create({
     },
     takePhotoContainer: {
         position: 'absolute',
-        top: 0,
-        left: 0,
-        transform: [{ translate: ['50%', '50%'] }],
+        top: 40,
+        left: 40,
         height: 160,
-        width: 238,
+        width: 'auto',
         borderWidth: 1,
         borderColor: '#FF6C00',
     },
     photo: {
         height: 160,
-        width: 238,
+        width: screenWidth,
     },
     inputWrapper: {
         marginBottom: 16,
