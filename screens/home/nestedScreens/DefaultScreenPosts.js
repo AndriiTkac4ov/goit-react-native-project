@@ -27,7 +27,7 @@ export default function DefaultScreenPosts({ route, navigation }) {
     };
 
     const lookMap = () => {
-        navigation.navigate('Map');
+        navigation.navigate('Map', route.params.location);
     };
 
     return (

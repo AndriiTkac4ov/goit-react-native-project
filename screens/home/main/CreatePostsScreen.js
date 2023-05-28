@@ -46,11 +46,10 @@ export default function CreatePostsScreen({ navigation }) {
                 longitude: location.coords.longitude,
             };
         setLocation(coords);
-        console.log(coords);
     };
 
     const sendPhoto = () => {
-        navigation.navigate('DefaultScreen', { photo }, { location });
+        navigation.navigate('DefaultScreen', { photo, location });
     };
 
     const keyboardHide = () => {
