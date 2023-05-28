@@ -38,6 +38,7 @@ export default function DefaultScreenPosts({ route, navigation }) {
                 renderItem={({ item }) => (
                     <View style={styles.postContainer}>
                         <Image source={{ uri: item.photo }} style={styles.postImage} />
+                        <Text>{route.params.infoOfPhoto.photoTitle}</Text>
                         <View style={styles.postInformation}>
                             <TouchableOpacity
                                 onPress={readComments}
@@ -49,7 +50,10 @@ export default function DefaultScreenPosts({ route, navigation }) {
                                 onPress={lookMap}
                                 // style={styles.linkContainer}
                             >
-                                <EvilIcons name="location" size={24} color="black" />
+                                <View style={styles.photoLocation}>
+                                    <EvilIcons name="location" size={24} color="black" />
+                                    <Text>{route.params.infoOfPhoto.photoLocation}</Text>
+                                </View>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -74,6 +78,10 @@ const styles = StyleSheet.create({
         borderColor: 'tomato',
     },
     postInformation: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    photoLocation: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },

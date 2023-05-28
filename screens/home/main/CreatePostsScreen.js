@@ -15,12 +15,18 @@ import * as MediaLibrary from "expo-media-library";
 import * as Location from 'expo-location';
 import { FontAwesome } from '@expo/vector-icons';
 
+const initialInfoOfPhoto = {
+    photoTitle: '',
+    photoLocation: '',
+}
+
 export default function CreatePostsScreen({ navigation }) {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
     const [cameraRef, setCameraRef] = useState(null);
     const [photo, setPhoto] = useState(null);
     const [location, setLocation] = useState(null);
+    const [infoOfPhoto, setInfoOfPhoto] = useState(initialInfoOfPhoto);
 
     useEffect(() => {
         (async () => {
@@ -49,7 +55,9 @@ export default function CreatePostsScreen({ navigation }) {
     };
 
     const sendPhoto = () => {
-        navigation.navigate('DefaultScreen', { photo, location });
+        navigation.navigate('DefaultScreen', { photo, location, infoOfPhoto });
+        setInfoOfPhoto(initialInfoOfPhoto);
+        keyboardHide();
     };
 
     const keyboardHide = () => {
@@ -109,8 +117,8 @@ export default function CreatePostsScreen({ navigation }) {
                             <TextInput
                                 placeholder={'Title...'}
                                 placeholderTextColor={'#BDBDBD'}
-                                // value={state.email}
-                                // onChangeText={(value)=>setState((prevState)=> ({...prevState, email: value}))}
+                                value={infoOfPhoto.photoTitle}
+                                onChangeText={(value)=>setInfoOfPhoto((prevState)=> ({...prevState, photoTitle: value}))}
                                 onFocus={handleFocusOn}
                                 style={{
                                     ...styles.input,
@@ -123,8 +131,8 @@ export default function CreatePostsScreen({ navigation }) {
                             <TextInput
                                 placeholder={'Location'}
                                 placeholderTextColor={'#BDBDBD'}
-                                // value={state.email}
-                                // onChangeText={(value)=>setState((prevState)=> ({...prevState, email: value}))}
+                                value={infoOfPhoto.photoLocation}
+                                onChangeText={(value)=>setInfoOfPhoto((prevState)=> ({...prevState, photoLocation: value}))}
                                 onFocus={handleFocusOn}
                                 style={{
                                     ...styles.input,
