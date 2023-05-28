@@ -13,6 +13,9 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useWidthDimension } from '../../hooks/useWidthDimension';
+import { useDispatch } from 'react-redux';
+
+import { authUser } from '../../redux/auth/authOperations';
 
 const initialState = {
     name: '',
@@ -31,18 +34,14 @@ export default function RegistrationScreen() {
     const [state, setState] = useState(initialState);
     const [isFocus, setIsFocus] = useState(initialStateForFocus);
 
+    const dispatch = useDispatch();
+
     const navigation = useNavigation();
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         setIsFocus(initialStateForFocus);
         Keyboard.dismiss();
-    }
-
-    const sendValues = () => {
-        console.log(state);
-        setState(initialState);
-        keyboardHide();
     }
 
     const handleFocusOnName = () => {
@@ -58,6 +57,12 @@ export default function RegistrationScreen() {
     const handleFocusOnPassword = () => {
         setIsShowKeyboard(true);
         setIsFocus({ onPassword: true });
+    }
+
+    const sendValues = () => {
+        dispatch(authUser.signUp(state))
+        setState(initialState);
+        keyboardHide();
     }
 
     return (

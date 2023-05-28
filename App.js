@@ -16,7 +16,7 @@ export default function App() {
     return null;
   }
 
-  const routing = useRoute({});
+  const routing = useRoute(false);
 
   return (
     <Provider store={store}>
