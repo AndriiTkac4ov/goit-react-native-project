@@ -6,7 +6,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 
-const signUp = ({name, email, password}) => async (dispatch, getSatte) => {
+const signUp = ({name, email, password}) => async (dispatch, getState) => {
     try {
         const user = await createUserWithEmailAndPassword(auth, email, password);
         console.log('user', user);
@@ -16,9 +16,17 @@ const signUp = ({name, email, password}) => async (dispatch, getSatte) => {
     }
 };
 
-const signIn = () => async (dispatch, getSatte) => { };
+const signIn = ({email, password}) => async (dispatch, getState) => {
+    try {
+        const user = await signInWithEmailAndPassword(auth, email, password);
+        console.log('user', user);
+    } catch (error) {
+        console.log('error', error);
+        console.log('error.message', error.message);
+    }
+};
 
-const signOut = () => async (dispatch, getSatte) => { };
+const signOut = () => async (dispatch, getState) => { };
 
 export const authUser = {
     signUp,
