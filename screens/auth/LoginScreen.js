@@ -12,9 +12,8 @@ import {
     Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useWidthDimension } from '../../hooks/useWidthDimension';
 import { useDispatch } from 'react-redux';
-
+import { useWidthDimension } from '../../hooks/useWidthDimension';
 import { authUser } from '../../redux/auth/authOperations';
 
 const initialState = {

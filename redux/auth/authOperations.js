@@ -16,8 +16,6 @@ const signUpOper = ({name, email, password}) => async (dispatch, getState) => {
         })
 
         const { uid, displayName } = await auth.currentUser;
-        
-        console.log('uid, displayName', uid, displayName);
 
         dispatch(authSlice.actions.updateUserProfile({
             userId: uid,
@@ -31,21 +29,51 @@ const signUpOper = ({name, email, password}) => async (dispatch, getState) => {
 
 const signInOper = ({email, password}) => async (dispatch, getState) => {
     try {
-        const user = await signInWithEmailAndPassword(auth, email, password);
-        console.log('user', user);
+        const { uid, displayName } = await signInWithEmailAndPassword(auth, email, password);
+
+        dispatch(authSlice.actions.updateUserProfile({
+            userId: uid,
+            name: displayName,
+        }));
     } catch (error) {
         console.log('error', error);
         console.log('error.message', error.message);
     }
 };
 
-const signOutOper = () => async (dispatch, getState) => { };
+const stateChangeOper = () => async (dispatch, getState) => {
+    try {
+        await onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const userUpdatedProfile = {
+                    userId: user.uid,
+                    name: user.displayName,
+                };
 
-const stateChangeOper = () => async (dispatch, getState) => { };
+                dispatch(authSlice.actions.authStateChange({ stateChange: true }));
+                dispatch(authSlice.actions.updateUserProfile(userUpdatedProfile));
+            };
+        });
+    } catch (error) {
+        console.log('error', error);
+        console.log('error.message', error.message);
+    }
+};
+
+const signOutOper = () => async (dispatch, getState) => {
+    try {
+        await signOut(auth);
+
+        dispatch(authSlice.actions.authSighOut());
+    } catch (error) {
+        console.log('error', error);
+        console.log('error.message', error.message);
+    }
+};
 
 export const authUser = {
     signUpOper,
     signInOper,
-    signOutOper,
     stateChangeOper,
+    signOutOper,
 };

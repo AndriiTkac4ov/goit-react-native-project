@@ -8,12 +8,19 @@ import {
     Feather,
     MaterialIcons,
 } from '@expo/vector-icons';
-
+import { useDispatch } from 'react-redux';
+import { authUser } from '../../redux/auth/authOperations';
 import { Main } from './main';
 
 const MainTab = createBottomTabNavigator();
 
 export default function HomeScreen() {
+    const dispatch = useDispatch();
+
+    const sighOut = () => {
+        dispatch(authUser.signOutOper());
+    };
+
     return (
         <MainTab.Navigator
             screenOptions={{
@@ -33,7 +40,7 @@ export default function HomeScreen() {
                     headerRight: () => (
                         <TouchableOpacity
                             activeOpacity={0.8}
-                            onPress={() => alert("This is a button!")}
+                            onPress={sighOut}
                             style={styles.logoutLink}
                         >
                             <MaterialIcons
