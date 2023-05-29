@@ -12,15 +12,13 @@ import { EvilIcons } from '@expo/vector-icons';
 export default function DefaultScreenPosts({ route, navigation }) {
     const [posts, setPosts] = useState([]);
 
-    console.log('route.params', route.params);
+    // console.log('route.params', route.params);
 
     useEffect(() => {
         if (route.params) {
             setPosts(prevState => [...prevState, route.params]);
         }
     }, [route.params]);
-
-    console.log('posts', posts);
 
     const readComments = () => {
         navigation.navigate('Comments');
