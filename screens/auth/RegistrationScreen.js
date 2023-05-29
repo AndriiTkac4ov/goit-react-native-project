@@ -60,7 +60,7 @@ export default function RegistrationScreen() {
     }
 
     const sendValues = () => {
-        dispatch(authUser.signUp(state));
+        dispatch(authUser.signUpOper(state));
         setState(initialState);
         keyboardHide();
     }

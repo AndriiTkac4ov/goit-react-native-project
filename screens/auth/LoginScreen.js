@@ -53,7 +53,7 @@ export default function LoginScreen() {
     }
 
     const sendValues = () => {
-        dispatch(authUser.signIn(state));
+        dispatch(authUser.signInOper(state));
         setState(initialState);
         keyboardHide();
     }
