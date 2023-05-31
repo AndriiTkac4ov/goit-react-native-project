@@ -13,7 +13,6 @@ const Main = () => {
 
     useEffect(() => {
         dispatch(authUser.stateChangeOper());
-        console.log('stateChange', stateChange)
     }, [])
 
     const routing = useRoute(stateChange);

@@ -1,6 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
+import {
+  getReactNativePersistence,
+  initializeAuth,
+} from 'firebase/auth/react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Функція для підключення авторизації в проект
 import { getAuth } from "firebase/auth";
@@ -26,10 +30,10 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 
-export const auth = getAuth(app);
+export const auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+});
+// export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-
-// export default app;
