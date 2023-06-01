@@ -36,7 +36,7 @@ export default function DefaultScreenPosts({ route, navigation }) {
                 renderItem={({ item }) => (
                     <View style={styles.postContainer}>
                         <Image source={{ uri: item.photo }} style={styles.postImage} />
-                        <Text>{route.params.infoOfPhoto.photoTitle}</Text>
+                        {/* <Text>{route.params.infoOfPhoto.photoTitle}</Text> */}
                         <View style={styles.postInformation}>
                             <TouchableOpacity
                                 onPress={readComments}
@@ -50,7 +50,7 @@ export default function DefaultScreenPosts({ route, navigation }) {
                             >
                                 <View style={styles.photoLocation}>
                                     <EvilIcons name="location" size={24} color="black" />
-                                    <Text>{route.params.infoOfPhoto.photoLocation}</Text>
+                                    {/* <Text>{route.params.infoOfPhoto.photoLocation}</Text> */}
                                 </View>
                             </TouchableOpacity>
                         </View>

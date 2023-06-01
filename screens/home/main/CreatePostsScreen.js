@@ -15,6 +15,11 @@ import { Camera } from 'expo-camera';
 import * as MediaLibrary from "expo-media-library";
 import * as Location from 'expo-location';
 import { FontAwesome } from '@expo/vector-icons';
+// for work with Firestore ------------------------
+import { nanoid } from 'nanoid';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+import { db, storage } from '../../../firebase/config';
 
 const initialInfoOfPhoto = {
     photoTitle: '',
@@ -58,21 +63,42 @@ export default function CreatePostsScreen({ navigation }) {
     };
 
     const sendPhoto = () => {
-        navigation.navigate('DefaultScreen', { photo, location, infoOfPhoto });
-        setInfoOfPhoto(initialInfoOfPhoto);
+        navigation.navigate('DefaultScreen', {
+            photo,
+            // location,
+            // infoOfPhoto,
+        });
+        // setInfoOfPhoto(initialInfoOfPhoto);
+        uploadPhotoToServer();
         keyboardHide();
+    };
+
+    const uploadPhotoToServer = async () => {
+        try {
+            const response = await fetch(photo);
+            const file = await response.blob();
+            const uniquePostId = nanoid();
+            const storageRef = ref(storage, `postsImages/${uniquePostId}`);
+            await uploadBytes(storageRef, file);
+            
+            console.log('PostImage written with ID: ', uniquePostId);
+            return await getDownloadURL(storageRef);
+        } catch (e) {
+            console.error('Error adding document: ', e);
+            throw e;
+        }
     };
 
     const keyboardHide = () => {
         setIsShowKeyboard(false);
         // setIsFocus(initialStateForFocus);
         Keyboard.dismiss();
-    }
+    };
 
     const handleFocusOn = () => {
         setIsShowKeyboard(true);
         // setIsFocus({ onTitle: true });
-    }
+    };
 
     if (hasCameraPermission === null) {
         return <View />;

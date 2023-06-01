@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import { useFonts } from 'expo-font';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
