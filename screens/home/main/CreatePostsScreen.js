@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import {
     View,
     Image,
@@ -36,6 +37,8 @@ export default function CreatePostsScreen({ navigation }) {
     const [location, setLocation] = useState(null);
     const [infoOfPhoto, setInfoOfPhoto] = useState(initialInfoOfPhoto);
 
+    const { userId, name } = useSelector((state) => state.auth);
+
     useEffect(() => {
         (async () => {
             const cameraPermission = await Camera.requestCameraPermissionsAsync();
@@ -63,16 +66,16 @@ export default function CreatePostsScreen({ navigation }) {
     };
 
     const sendPhoto = () => {
+        uploadPostToServer();
         navigation.navigate('DefaultScreen', {
             photo,
             // location,
             // infoOfPhoto,
         });
-        // setInfoOfPhoto(initialInfoOfPhoto);
-        uploadPhotoToServer();
+        setInfoOfPhoto(initialInfoOfPhoto);
         keyboardHide();
     };
-
+    
     const uploadPhotoToServer = async () => {
         try {
             const response = await fetch(photo);
@@ -82,7 +85,26 @@ export default function CreatePostsScreen({ navigation }) {
             await uploadBytes(storageRef, file);
             
             console.log('PostImage written with ID: ', uniquePostId);
+
             return await getDownloadURL(storageRef);
+        } catch (e) {
+            console.error('Error adding document: ', e);
+            throw e;
+        }
+    };
+
+    const uploadPostToServer = async () => {
+        try {
+            console.log('Hello!!!', userId, name)
+            const serverPhoto = await uploadPhotoToServer();
+            const docRef = await addDoc(collection(db, 'posts'), {
+                userId,
+                name,
+                serverPhoto,
+                location,
+                infoOfPhoto,
+            });
+            console.log('Document written with ID: ', docRef.id);
         } catch (e) {
             console.error('Error adding document: ', e);
             throw e;

@@ -29,12 +29,7 @@ const signUpOper = ({name, email, password}) => async (dispatch, getState) => {
 
 const signInOper = ({email, password}) => async (dispatch, getState) => {
     try {
-        const { uid, displayName } = await signInWithEmailAndPassword(auth, email, password);
-
-        dispatch(authSlice.actions.updateUserProfile({
-            userId: uid,
-            name: displayName,
-        }));
+        await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
         console.log('error', error);
         console.log('error.message', error.message);
@@ -50,8 +45,8 @@ const stateChangeOper = () => async (dispatch, getState) => {
                     name: user.displayName,
                 };
 
-                dispatch(authSlice.actions.authStateChange({ stateChange: true }));
                 dispatch(authSlice.actions.updateUserProfile(userUpdatedProfile));
+                dispatch(authSlice.actions.authStateChange({ stateChange: true }));
             };
         });
     } catch (error) {
