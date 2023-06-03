@@ -15,6 +15,8 @@ import { db } from '../../../firebase/config';
 
 export default function ProfileScreen({ navigation }) {
     const [userPosts, setUserPosts] = useState([]);
+    const [isBtnInFocus, setIsBtnInFocus] = useState(false);
+
     const { name, userId } = useSelector((state) => state.auth);
 
     useEffect(() => {
@@ -35,7 +37,7 @@ export default function ProfileScreen({ navigation }) {
     };
 
     const readComments = (item) => {
-        navigation.navigate('Comments', {postId: item.id});
+        navigation.navigate('Comments', {postId: item.id, postUri: item.serverPhoto});
     };
 
     const lookMap = (item) => {
@@ -45,6 +47,7 @@ export default function ProfileScreen({ navigation }) {
     const deletePost = async (item) => {
         try {
             await deleteDoc(doc(db, "posts", item.id));
+            setIsBtnInFocus(true);
         } catch (error) {
             console.error('Error deleting post: ', error);
             throw error;
@@ -82,13 +85,22 @@ export default function ProfileScreen({ navigation }) {
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity
-                                onPress={() => deletePost(item)}
-                                style={styles.postDeleteWrapper}
+                            onPress={() => deletePost(item)}
+                            style={styles.postDeleteWrapper}
+                        >
+                            <View
+                                style={{
+                                    ...styles.postDeleteBtn,
+                                    backgroundColor: isBtnInFocus ? '#FF6C00' : '#F6F6F6',
+                                }}
                             >
-                                <View style={styles.postDeleteBtn}>
-                                    <Feather name="trash-2" size={24} color="black" />
-                                </View>
-                            </TouchableOpacity>
+                                <Feather
+                                    name="trash-2"
+                                    size={24}
+                                    style = {{color: isBtnInFocus ? '#FFFFFF' : "rgba(33, 33, 33, 0.8)"}}
+                                />
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 )}
             />}
@@ -120,6 +132,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderWidth: 2,
         borderColor: 'tomato',
+        borderRadius: 8,
     },
     postInformation: {
         flexDirection: 'row',
@@ -138,7 +151,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 8,
         width: 70,
-        backgroundColor: '#F6F6F6',
         borderRadius: 20,
     },
 });

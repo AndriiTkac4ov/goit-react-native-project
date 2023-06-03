@@ -34,8 +34,7 @@ export default function DefaultScreenPosts({ navigation }) {
     }, []);
 
     const readComments = (item) => {
-        navigation.navigate('Comments', { postId: item.id });
-        console.log('DefaultScreenPosts', item);
+        navigation.navigate('Comments', { postId: item.id, postUri: item.serverPhoto });
     };
 
     const lookMap = (item) => {
@@ -89,6 +88,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderWidth: 2,
         borderColor: 'tomato',
+        borderRadius: 8,
     },
     postInformation: {
         flexDirection: 'row',

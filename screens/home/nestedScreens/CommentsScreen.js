@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {
     View,
     FlatList,
+    Image,
     Text,
     TextInput,
     TouchableOpacity,
@@ -16,7 +17,7 @@ export default function CommentsScreen({ route }) {
     const [comment, setComment] = useState('');
     const [allComments, setAllComments] = useState([]);
 
-    const postId = route.params.postId;
+    const { postId, postUri } = route.params;
     const { name } = useSelector((state) => state.auth);
 
     useEffect(() => {
@@ -57,6 +58,9 @@ export default function CommentsScreen({ route }) {
     
     return (
         <View style={styles.container}>
+            <View style={styles.postContainer}>
+                <Image source={{uri: postUri}} style={styles.postImage} />
+            </View>
             <FlatList
                 style={styles.commentsList}
                 data={allComments}
@@ -102,8 +106,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255, 255, 255, 1)',
         paddingHorizontal: 16,
     },
-    commentsList: {
+    postContainer: {
         marginTop: 16,
+    },
+    postImage: {
+        height: 200,
+        borderWidth: 2,
+        borderColor: 'tomato',
+        borderRadius: 8,
+    },
+    commentsList: {
+        marginTop: 8,
     },
     commentContainer: {
         padding: 8,
