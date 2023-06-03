@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { collection, doc, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebase/config';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
     const [posts, setPosts] = useState([]);
     const { userId } = useSelector((state) => state.auth);
 
