@@ -34,7 +34,8 @@ export default function DefaultScreenPosts({ navigation }) {
     }, []);
 
     const readComments = (item) => {
-        navigation.navigate('Comments', {postId: item.id});
+        navigation.navigate('Comments', { postId: item.id });
+        console.log('DefaultScreenPosts', item);
     };
 
     const lookMap = (item) => {
@@ -79,9 +80,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         paddingHorizontal: 16,
+        marginTop: 16,
     },
     postContainer: {
-        marginBottom: 8,
+        marginBottom: 32,
     },
     postImage: {
         height: 200,

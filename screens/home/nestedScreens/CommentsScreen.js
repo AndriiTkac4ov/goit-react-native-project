@@ -9,7 +9,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { collection, doc, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, doc, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebase/config';
 
 export default function CommentsScreen({ route }) {

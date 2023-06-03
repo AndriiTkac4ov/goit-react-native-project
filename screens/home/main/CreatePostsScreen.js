@@ -79,8 +79,6 @@ export default function CreatePostsScreen({ navigation }) {
             const uniquePostId = uuid.v4();
             const storageRef = ref(storage, `postsImages/${uniquePostId}`);
             await uploadBytes(storageRef, file);
-            
-            console.log('PostImage written with ID: ', uniquePostId);
 
             return await getDownloadURL(storageRef);
         } catch (error) {

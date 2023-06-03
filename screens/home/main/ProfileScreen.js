@@ -8,8 +8,9 @@ import {
     StyleSheet,
 } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
-import { collection, doc, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, doc, deleteDoc, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebase/config';
 
 export default function ProfileScreen({ navigation }) {
@@ -25,7 +26,7 @@ export default function ProfileScreen({ navigation }) {
             const postsRef = await collection(db, 'posts');
             const queryPosts = await query(postsRef, where('userId', '==', userId));
             await onSnapshot(queryPosts, (data) => {
-                setUserPosts(data.docs.map((doc) => ({ ...doc.data() })));
+                setUserPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
             });
         } catch (error) {
             console.error('Error profile: ', error);
@@ -39,6 +40,15 @@ export default function ProfileScreen({ navigation }) {
 
     const lookMap = (item) => {
         navigation.navigate('Map', {location: item.location, locationName: item.infoOfPhoto.photoTitle});
+    };
+
+    const deletePost = async (item) => {
+        try {
+            await deleteDoc(doc(db, "posts", item.id));
+        } catch (error) {
+            console.error('Error deleting post: ', error);
+            throw error;
+        }
     };
     
     return (
@@ -71,6 +81,14 @@ export default function ProfileScreen({ navigation }) {
                                 </View>
                             </TouchableOpacity>
                         </View>
+                        <TouchableOpacity
+                                onPress={() => deletePost(item)}
+                                style={styles.postDeleteWrapper}
+                            >
+                                <View style={styles.postDeleteBtn}>
+                                    <Feather name="trash-2" size={24} color="black" />
+                                </View>
+                            </TouchableOpacity>
                     </View>
                 )}
             />}
@@ -96,7 +114,7 @@ const styles = StyleSheet.create({
         marginTop: 16,
     },
     postContainer: {
-        marginBottom: 8,
+        marginBottom: 32,
     },
     postImage: {
         height: 200,
@@ -110,5 +128,17 @@ const styles = StyleSheet.create({
     photoLocation: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+    },
+    postDeleteWrapper: {
+        flex: 1,
+        alignItems: 'center',
+    },
+    postDeleteBtn: {
+        flex: 1,
+        alignItems: 'center',
+        padding: 8,
+        width: 70,
+        backgroundColor: '#F6F6F6',
+        borderRadius: 20,
     },
 });
