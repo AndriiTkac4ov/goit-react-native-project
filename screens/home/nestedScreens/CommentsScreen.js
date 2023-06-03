@@ -9,7 +9,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { collection, addDoc, doc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, doc, addDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebase/config';
 
 export default function CommentsScreen({ route }) {
@@ -17,11 +17,11 @@ export default function CommentsScreen({ route }) {
     const [allComments, setAllComments] = useState([]);
 
     const postId = route.params.postId;
-    const { name } = useSelector((state) => state.auth)
+    const { name } = useSelector((state) => state.auth);
 
     useEffect(() => {
         getAllComments();
-    }, [])
+    }, []);
 
     const createComment = async () => {
         try {

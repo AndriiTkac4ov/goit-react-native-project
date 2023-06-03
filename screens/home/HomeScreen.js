@@ -80,6 +80,19 @@ export default function HomeScreen() {
                 name='Profile'
                 component={Main.ProfileScreen}
                 options={{
+                    headerRight: () => (
+                        <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={sighOut}
+                            style={styles.logoutLink}
+                        >
+                            <MaterialIcons
+                                name="logout"
+                                size={24}
+                                style = {{color: "rgba(189, 189, 189, 1)"}}
+                            />
+                        </TouchableOpacity>
+                    ),
                     tabBarIcon: ({ focused, size, color }) => (
                         <Feather
                             name="user"
