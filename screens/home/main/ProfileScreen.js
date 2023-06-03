@@ -13,8 +13,8 @@ import { collection, doc, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebase/config';
 
 export default function ProfileScreen({ navigation }) {
-    const [posts, setPosts] = useState([]);
-    const { userId } = useSelector((state) => state.auth);
+    const [userPosts, setUserPosts] = useState([]);
+    const { name, userId } = useSelector((state) => state.auth);
 
     useEffect(() => {
         getUserPosts();
@@ -25,7 +25,7 @@ export default function ProfileScreen({ navigation }) {
             const postsRef = await collection(db, 'posts');
             const queryPosts = await query(postsRef, where('userId', '==', userId));
             await onSnapshot(queryPosts, (data) => {
-                setPosts(data.docs.map((doc) => ({ ...doc.data() })));
+                setUserPosts(data.docs.map((doc) => ({ ...doc.data() })));
             });
         } catch (error) {
             console.error('Error profile: ', error);
@@ -43,8 +43,12 @@ export default function ProfileScreen({ navigation }) {
     
     return (
         <View style={styles.container}>
-            {posts && <FlatList
-                data={posts}
+            <View style={styles.userProfile}>
+                <Text style={styles.userName}>{name}</Text>
+            </View>
+            {userPosts && <FlatList
+                style={styles.userPostsList}
+                data={userPosts}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.postContainer}>
@@ -78,7 +82,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 1)',
         paddingHorizontal: 16,
+    },
+    userProfile: {
+        marginTop: 16,
+    },
+    userName: {
+        textAlign: 'center',
+        fontSize: 24,
+    },
+    userPostsList: {
+        marginTop: 16,
     },
     postContainer: {
         marginBottom: 8,
