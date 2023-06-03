@@ -8,24 +8,37 @@ import {
     StyleSheet,
 } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
+import { collection, getDocs, onSnapshot } from 'firebase/firestore'; 
+import { db } from '../../../firebase/config';
 
-export default function DefaultScreenPosts({ route, navigation }) {
+export default function DefaultScreenPosts({ navigation }) {
     const [posts, setPosts] = useState([]);
 
-    // console.log('route.params', route.params);
+    const getAllPosts = async () => {
+        try {
+            // Перевіряємо у консолі отримані дані
+            // const snapshot = await getDocs(collection(db, 'posts'));
+            // snapshot.forEach((doc) => console.log(`${doc.id} =>`, doc.data()));
+
+            await onSnapshot(collection(db, "posts"), (data) => {
+                setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+            });
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    };
 
     useEffect(() => {
-        if (route.params) {
-            setPosts(prevState => [...prevState, route.params]);
-        }
-    }, [route.params]);
+        getAllPosts();
+    }, []);
 
     const readComments = () => {
         navigation.navigate('Comments');
     };
 
-    const lookMap = () => {
-        navigation.navigate('Map', route.params.location);
+    const lookMap = (item) => {
+        navigation.navigate('Map', {location: item.location, locationName: item.infoOfPhoto.photoTitle});
     };
 
     return (
@@ -35,8 +48,8 @@ export default function DefaultScreenPosts({ route, navigation }) {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.postContainer}>
-                        <Image source={{ uri: item.photo }} style={styles.postImage} />
-                        {/* <Text>{route.params.infoOfPhoto.photoTitle}</Text> */}
+                        <Image source={{ uri: item.serverPhoto }} style={styles.postImage} />
+                        <Text>{item.infoOfPhoto.photoTitle}</Text>
                         <View style={styles.postInformation}>
                             <TouchableOpacity
                                 onPress={readComments}
@@ -45,12 +58,12 @@ export default function DefaultScreenPosts({ route, navigation }) {
                                 <EvilIcons name="comment" size={24} color="black" />
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={lookMap}
+                                onPress={() => lookMap(item)}
                                 // style={styles.linkContainer}
                             >
                                 <View style={styles.photoLocation}>
                                     <EvilIcons name="location" size={24} color="black" />
-                                    {/* <Text>{route.params.infoOfPhoto.photoLocation}</Text> */}
+                                    <Text>{item.infoOfPhoto.photoLocation}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>

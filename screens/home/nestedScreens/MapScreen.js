@@ -5,21 +5,23 @@ import {
 } from "react-native";
 
 export default function MapScreen({ route }) {
+    const { location, locationName } = route.params;
+    
     return (
         <View style={styles.container}>
             <MapView
                 style={styles.map}
                 minZoomLevel={10}
                 initialRegion={{
-                    longitude: route.params?.longitude,
-                    latitude: route.params?.latitude,
+                    longitude: location?.longitude,
+                    latitude: location?.latitude,
                     longitudeDelta: 0.001,
                     latitudeDelta: 0.001,
                 }}
             >
                 <Marker
-                    title='I am here'
-                    coordinate={{ longitude: route.params?.longitude, latitude: route.params?.latitude }}
+                    title={locationName}
+                    coordinate={{ longitude: location?.longitude, latitude: location?.latitude }}
                 />
             </MapView>
         </View>

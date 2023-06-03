@@ -17,7 +17,7 @@ import * as MediaLibrary from "expo-media-library";
 import * as Location from 'expo-location';
 import { FontAwesome } from '@expo/vector-icons';
 // for work with Firestore ------------------------
-import { nanoid } from 'nanoid';
+import uuid from 'react-native-uuid';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 import { db, storage } from '../../../firebase/config';
@@ -67,11 +67,7 @@ export default function CreatePostsScreen({ navigation }) {
 
     const sendPhoto = () => {
         uploadPostToServer();
-        navigation.navigate('DefaultScreen', {
-            photo,
-            // location,
-            // infoOfPhoto,
-        });
+        navigation.navigate('DefaultScreen');
         setInfoOfPhoto(initialInfoOfPhoto);
         keyboardHide();
     };
@@ -80,34 +76,32 @@ export default function CreatePostsScreen({ navigation }) {
         try {
             const response = await fetch(photo);
             const file = await response.blob();
-            const uniquePostId = nanoid();
+            const uniquePostId = uuid.v4();
             const storageRef = ref(storage, `postsImages/${uniquePostId}`);
             await uploadBytes(storageRef, file);
             
             console.log('PostImage written with ID: ', uniquePostId);
 
             return await getDownloadURL(storageRef);
-        } catch (e) {
-            console.error('Error adding document: ', e);
-            throw e;
+        } catch (error) {
+            console.error('Error adding document: ', error);
+            throw error;
         }
     };
 
     const uploadPostToServer = async () => {
         try {
-            console.log('Hello!!!', userId, name)
             const serverPhoto = await uploadPhotoToServer();
-            const docRef = await addDoc(collection(db, 'posts'), {
+            await addDoc(collection(db, 'posts'), {
                 userId,
                 name,
                 serverPhoto,
                 location,
                 infoOfPhoto,
             });
-            console.log('Document written with ID: ', docRef.id);
-        } catch (e) {
-            console.error('Error adding document: ', e);
-            throw e;
+        } catch (error) {
+            console.error('Error adding document: ', error);
+            throw error;
         }
     };
 
