@@ -84,7 +84,7 @@ export default function CreatePostsScreen({ navigation }) {
 
             return await getDownloadURL(storageRef);
         } catch (error) {
-            console.error('Error adding document: ', error);
+            console.error('Error adding postImage: ', error);
             throw error;
         }
     };
@@ -100,7 +100,7 @@ export default function CreatePostsScreen({ navigation }) {
                 infoOfPhoto,
             });
         } catch (error) {
-            console.error('Error adding document: ', error);
+            console.error('Error adding post: ', error);
             throw error;
         }
     };

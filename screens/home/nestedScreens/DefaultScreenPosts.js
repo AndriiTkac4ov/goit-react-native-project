@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import {
     View,
-    Text,
     FlatList,
     Image,
+    Text,
     TouchableOpacity,
     StyleSheet,
 } from 'react-native';
@@ -33,8 +33,8 @@ export default function DefaultScreenPosts({ navigation }) {
         getAllPosts();
     }, []);
 
-    const readComments = () => {
-        navigation.navigate('Comments');
+    const readComments = (item) => {
+        navigation.navigate('Comments', {postId: item.id});
     };
 
     const lookMap = (item) => {
@@ -52,7 +52,7 @@ export default function DefaultScreenPosts({ navigation }) {
                         <Text>{item.infoOfPhoto.photoTitle}</Text>
                         <View style={styles.postInformation}>
                             <TouchableOpacity
-                                onPress={readComments}
+                                onPress={() => readComments(item)}
                                 // style={styles.linkContainer}
                             >
                                 <EvilIcons name="comment" size={24} color="black" />
