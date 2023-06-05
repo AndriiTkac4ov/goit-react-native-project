@@ -6,7 +6,7 @@ import {
     signOut,
 } from 'firebase/auth';
 import { auth } from '../../firebase/config';
-import { authSlice } from './authReducer';
+import { authSlice } from './authSlice';
 
 const signUpOper = ({name, email, password}) => async (dispatch, getState) => {
     try {
