@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import {
-    StyleSheet,
-    Text,
     View,
+    Text,
     ImageBackground,
     TextInput,
     TouchableOpacity,
@@ -10,6 +9,7 @@ import {
     Platform,
     KeyboardAvoidingView,
     Keyboard,
+    StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
@@ -39,23 +39,23 @@ export default function LoginScreen() {
         setIsShowKeyboard(false);
         setIsFocus(initialStateForFocus);
         Keyboard.dismiss();
-    }
+    };
 
     const handleFocusOnEmail = () => {
         setIsShowKeyboard(true);
         setIsFocus({ onEmail: true });
-    }
+    };
 
     const handleFocusOnPassword = () => {
         setIsShowKeyboard(true);
         setIsFocus({ onPassword: true });
-    }
+    };
 
     const sendValues = () => {
         dispatch(authUser.signInOper(state));
         setState(initialState);
         keyboardHide();
-    }
+    };
 
     return (
         <TouchableWithoutFeedback onPress={keyboardHide}>

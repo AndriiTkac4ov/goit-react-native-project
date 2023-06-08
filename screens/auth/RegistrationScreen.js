@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
-    StyleSheet,
-    Text,
     View,
+    Text,
+    Image,
     ImageBackground,
     TextInput,
     TouchableOpacity,
@@ -10,11 +10,15 @@ import {
     Platform,
     KeyboardAvoidingView,
     Keyboard,
+    Dimensions,
+    StyleSheet,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { useWidthDimension } from '../../hooks/useWidthDimension';
 import { authUser } from '../../redux/auth/authOperations';
+import { AntDesign } from '@expo/vector-icons';
+import { uploadAvatarToServer } from '../../helpers/uploadAvatarToServer';
 
 const initialState = {
     name: '',
@@ -28,9 +32,12 @@ const initialStateForFocus = {
     onPassword: false,
 }
 
+const screenWidth = (Dimensions.get('window').width - 120)/2;
+
 export default function RegistrationScreen() {
     const [isShowKeyboard, setIsShowKeyboard] = useState(false);
     const [state, setState] = useState(initialState);
+    const [avatarUri, setAvatarUri] = useState(null);
     const [isFocus, setIsFocus] = useState(initialStateForFocus);
 
     const dispatch = useDispatch();
@@ -41,28 +48,33 @@ export default function RegistrationScreen() {
         setIsShowKeyboard(false);
         setIsFocus(initialStateForFocus);
         Keyboard.dismiss();
-    }
+    };
 
     const handleFocusOnName = () => {
         setIsShowKeyboard(true);
         setIsFocus({ onName: true });
-    }
+    };
 
     const handleFocusOnEmail = () => {
         setIsShowKeyboard(true);
         setIsFocus({ onEmail: true });
-    }
+    };
 
     const handleFocusOnPassword = () => {
         setIsShowKeyboard(true);
         setIsFocus({ onPassword: true });
-    }
+    };
+
+    const addAvatar = () => {
+        uploadAvatarToServer();
+        console.log('Let see Avatar!!!');
+    };
 
     const sendValues = () => {
         dispatch(authUser.signUpOper(state));
         setState(initialState);
         keyboardHide();
-    }
+    };
 
     return (
         <TouchableWithoutFeedback onPress={keyboardHide}>
@@ -76,6 +88,20 @@ export default function RegistrationScreen() {
                         behavior={Platform.OS === 'ios' && 'padding'}
                     >
                         <View style={styles.registerWrapper}>
+                            <View style={styles.avatarWrapper}>
+                                <View>
+                                    {avatarUri && (
+                                        <Image source={{ uri: avatarUri }} style={styles.avatar} />
+                                    )}
+                                </View>
+                                <TouchableOpacity
+                                    onPress={addAvatar}
+                                    style={styles.addAvatarBtn}
+                                >
+                                    <AntDesign name="pluscircleo" size={24} color="rgba(255, 108, 0, 1)" />
+                                </TouchableOpacity>
+                            </View>
+
                             <Text style={styles.title}>Registration</Text>
 
                             <View style={{
@@ -170,6 +196,27 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
         paddingTop: 92,
+    },
+    avatarWrapper: {
+        position: 'absolute',
+        top: -60,
+        left: screenWidth,
+        zIndex: 1,
+        width: 120,
+        height: 120,
+        borderRadius: 16,
+        backgroundColor: '#F6F6F6',
+    },
+    avatar: {
+        width: "100%",
+        height: "100%",
+        transform: [{ scale: 1.01 }],
+    },
+    addAvatarBtn: {
+        position: 'absolute',
+        top: 82,
+        left: 108,
+        zIndex: 2,
     },
     title: {
         fontFamily: 'Roboto-Medium',
