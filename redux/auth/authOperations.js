@@ -8,17 +8,19 @@ import {
 import { auth } from '../../firebase/config';
 import { authSlice } from './authSlice';
 
-const signUpOper = ({name, email, password}) => async (dispatch, getState) => {
+const signUpOper = ({userAvatar, name, email, password}) => async (dispatch, getState) => {
     try {
         await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(auth.currentUser, {
-            displayName: name
+            photoURL: userAvatar,
+            displayName: name,
         })
 
-        const { uid, displayName } = await auth.currentUser;
+        const { uid, photoURL, displayName } = await auth.currentUser;
 
         dispatch(authSlice.actions.updateUserProfile({
             userId: uid,
+            userAvatar: photoURL,
             name: displayName,
         }));
     } catch (error) {
@@ -42,6 +44,7 @@ const stateChangeOper = () => async (dispatch, getState) => {
             if (user) {
                 const userUpdatedProfile = {
                     userId: user.uid,
+                    userAvatar: user.photoURL,
                     name: user.displayName,
                 };
 

@@ -89,11 +89,9 @@ export default function RegistrationScreen() {
 
     const sendValues = async () => {
         try {
-            const userAvatar = await uploadAvatarToServer(avatarUri);
+            const userAvatar = await helpers.uploadAvatarToServer(avatarUri);
 
-            // ------------------------
-            dispatch(authUser.signUpOper(state));
-            // ------------------------
+            dispatch(authUser.signUpOper({...state, userAvatar}));
             setState(initialState);
             setAvatarUri(null);
             keyboardHide();
@@ -127,7 +125,10 @@ export default function RegistrationScreen() {
                                     }
                                     style={styles.pickAvatarBtn}
                                 >
-                                    <AntDesign name="pluscircleo" size={24} color="rgba(255, 108, 0, 1)" />
+                                    {avatarUri ?
+                                        (<AntDesign name="minuscircle" size={24} color="rgba(255, 108, 0, 1)" />) :
+                                        (<AntDesign name="pluscircleo" size={24} color="rgba(255, 108, 0, 1)" />)
+                                    }
                                 </TouchableOpacity>
                             </View>
 
@@ -212,7 +213,7 @@ export default function RegistrationScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF',
     },
     backgroundPhoto: {
         flex: 1,

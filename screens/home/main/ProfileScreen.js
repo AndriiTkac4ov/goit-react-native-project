@@ -3,8 +3,13 @@ import {
     View,
     FlatList,
     Image,
+    ImageBackground,
     Text,
     TouchableOpacity,
+    TouchableWithoutFeedback,
+    KeyboardAvoidingView,
+    Keyboard,
+    Dimensions,
     StyleSheet,
 } from 'react-native';
 import { EvilIcons } from '@expo/vector-icons';
@@ -13,11 +18,13 @@ import { useSelector } from 'react-redux';
 import { collection, doc, deleteDoc, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebase/config';
 
+const screenWidth = (Dimensions.get('window').width - 120)/2;
+
 export default function ProfileScreen({ navigation }) {
     const [userPosts, setUserPosts] = useState([]);
     const [isBtnInFocus, setIsBtnInFocus] = useState(false);
 
-    const { name, userId } = useSelector((state) => state.auth);
+    const { userId, userAvatar, name  } = useSelector((state) => state.auth);
 
     useEffect(() => {
         getUserPosts();
@@ -53,70 +60,114 @@ export default function ProfileScreen({ navigation }) {
             throw error;
         }
     };
+
+    const keyboardHide = () => {
+        // setIsShowKeyboard(false);
+        // setIsFocus(initialStateForFocus);
+        Keyboard.dismiss();
+    };
     
     return (
-        <View style={styles.container}>
-            <View style={styles.userProfile}>
-                <Text style={styles.userName}>{name}</Text>
-            </View>
-            {userPosts && <FlatList
-                style={styles.userPostsList}
-                data={userPosts}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <View style={styles.postContainer}>
-                        <Image source={{ uri: item.serverPhoto }} style={styles.postImage} />
-                        <Text>{item.infoOfPhoto.photoTitle}</Text>
-                        <View style={styles.postInformation}>
-                            <TouchableOpacity
-                                onPress={() => readComments(item)}
-                            // style={styles.linkContainer}
-                            >
-                                <EvilIcons name="comment" size={24} color="black" />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => lookMap(item)}
-                            // style={styles.linkContainer}
-                            >
-                                <View style={styles.photoLocation}>
-                                    <EvilIcons name="location" size={24} color="black" />
-                                    <Text>{item.infoOfPhoto.photoLocation}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <TouchableOpacity
-                            onPress={() => deletePost(item)}
-                            style={styles.postDeleteWrapper}
-                        >
-                            <View
-                                style={{
-                                    ...styles.postDeleteBtn,
-                                    backgroundColor: isBtnInFocus ? '#FF6C00' : '#F6F6F6',
-                                }}
-                            >
-                                <Feather
-                                    name="trash-2"
-                                    size={24}
-                                    style = {{color: isBtnInFocus ? '#FFFFFF' : "rgba(33, 33, 33, 0.8)"}}
-                                />
+        <TouchableWithoutFeedback onPress={keyboardHide}>
+            <View style={styles.container}>
+                <ImageBackground
+                    source={require("../../../assets/images/background-photo.jpg")}
+                    style={styles.backgroundPhoto}
+                >
+                    <KeyboardAvoidingView
+                        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                        behavior={Platform.OS === 'ios' && 'padding'}
+                    >
+                        <View style={styles.userProfile}>
+                            <View style={styles.userAvatarWrapper}>
+                                {userAvatar && <Image source={{ uri: userAvatar }} style={styles.avatar} />}
                             </View>
-                        </TouchableOpacity>
-                    </View>
-                )}
-            />}
-        </View>
+                            <View>
+                                <Text style={styles.userName}>{name}</Text>
+                            </View>
+                            {userPosts && <FlatList
+                                style={styles.userPostsList}
+                                data={userPosts}
+                                keyExtractor={(item, index) => index.toString()}
+                                renderItem={({ item }) => (
+                                    <View style={styles.postContainer}>
+                                        <Image source={{ uri: item.serverPhoto }} style={styles.postImage} />
+                                        <Text>{item.infoOfPhoto.photoTitle}</Text>
+                                        <View style={styles.postInformation}>
+                                            <TouchableOpacity
+                                                onPress={() => readComments(item)}
+                                            // style={styles.linkContainer}
+                                            >
+                                                <EvilIcons name="comment" size={24} color="black" />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => lookMap(item)}
+                                            // style={styles.linkContainer}
+                                            >
+                                                <View style={styles.photoLocation}>
+                                                    <EvilIcons name="location" size={24} color="black" />
+                                                    <Text>{item.infoOfPhoto.photoLocation}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
+                                        <TouchableOpacity
+                                            onPress={() => deletePost(item)}
+                                            style={styles.postDeleteWrapper}
+                                        >
+                                            <View
+                                                style={{
+                                                    ...styles.postDeleteBtn,
+                                                    backgroundColor: isBtnInFocus ? '#FF6C00' : '#F6F6F6',
+                                                }}
+                                            >
+                                                <Feather
+                                                    name="trash-2"
+                                                    size={24}
+                                                    style = {{color: isBtnInFocus ? '#FFFFFF' : "rgba(33, 33, 33, 0.8)"}}
+                                                />
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            />}
+                        </View>
+                    </KeyboardAvoidingView>
+                </ImageBackground>
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 1)',
-        paddingHorizontal: 16,
+    },
+    backgroundPhoto: {
+        flex: 1,
+        justifyContent: 'flex-end',
     },
     userProfile: {
-        marginTop: 16,
+        backgroundColor: '#FFFFFF',
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        paddingTop: 92,
+        paddingHorizontal: 16,
+    },
+    userAvatarWrapper: {
+        position: 'absolute',
+        top: -60,
+        left: screenWidth,
+        zIndex: 1,
+        width: 120,
+        height: 120,
+        borderRadius: 16,
+        backgroundColor: '#F6F6F6',
+    },
+    avatar: {
+        width: "100%",
+        height: "100%",
+        borderRadius: 16,
+        transform: [{ scale: 1.01 }],
     },
     userName: {
         textAlign: 'center',
