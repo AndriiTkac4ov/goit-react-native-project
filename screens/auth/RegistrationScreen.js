@@ -18,7 +18,8 @@ import { useDispatch } from 'react-redux';
 import { useWidthDimension } from '../../hooks/useWidthDimension';
 import { authUser } from '../../redux/auth/authOperations';
 import { AntDesign } from '@expo/vector-icons';
-import { uploadAvatarToServer } from '../../helpers/uploadAvatarToServer';
+import { helpers } from '../../helpers';
+import * as ImagePicker from 'expo-image-picker';
 
 const initialState = {
     name: '',
@@ -65,15 +66,41 @@ export default function RegistrationScreen() {
         setIsFocus({ onPassword: true });
     };
 
-    const addAvatar = () => {
-        uploadAvatarToServer();
-        console.log('Let see Avatar!!!');
+    const pickAvatar = async () => {
+        try {
+            let avatar = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+                base64: true,
+            });
+
+            const uriForAvatar = await helpers.resizeImage(avatar.assets[0].uri);
+
+            if (!avatar.canceled) {
+                setAvatarUri(uriForAvatar);
+            };
+        } catch (error) {
+            console.error('Error with choosing an avatar: ', error);
+            throw error;
+        }
     };
 
-    const sendValues = () => {
-        dispatch(authUser.signUpOper(state));
-        setState(initialState);
-        keyboardHide();
+    const sendValues = async () => {
+        try {
+            const userAvatar = await uploadAvatarToServer(avatarUri);
+
+            // ------------------------
+            dispatch(authUser.signUpOper(state));
+            // ------------------------
+            setState(initialState);
+            setAvatarUri(null);
+            keyboardHide();
+        } catch (error) {
+            console.error('Error of registration: ', error);
+            throw error;
+        }
     };
 
     return (
@@ -95,8 +122,10 @@ export default function RegistrationScreen() {
                                     )}
                                 </View>
                                 <TouchableOpacity
-                                    onPress={addAvatar}
-                                    style={styles.addAvatarBtn}
+                                    onPress={
+                                        avatarUri ? () => setAvatarUri(null) : pickAvatar
+                                    }
+                                    style={styles.pickAvatarBtn}
                                 >
                                     <AntDesign name="pluscircleo" size={24} color="rgba(255, 108, 0, 1)" />
                                 </TouchableOpacity>
@@ -212,7 +241,7 @@ const styles = StyleSheet.create({
         height: "100%",
         transform: [{ scale: 1.01 }],
     },
-    addAvatarBtn: {
+    pickAvatarBtn: {
         position: 'absolute',
         top: 82,
         left: 108,
